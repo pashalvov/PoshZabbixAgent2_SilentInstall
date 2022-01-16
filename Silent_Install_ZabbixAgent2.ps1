@@ -13,7 +13,7 @@ $InstallerLogPath = Join-Path $env:TEMP ('zabbix_agent2_installer_' + (Get-Date)
 # Config settings
 $LogType = 'file'
 $LogFile = Join-Path $InstallFolder 'zabbix_agent2.log'
-$Server = 'vds.lvovpd.ru'
+$Server = '192.168.1.4'
 $ServerActive = $Server
 $Timeout = 15
 $HostName = $env:COMPUTERNAME
@@ -72,7 +72,20 @@ if ($decision -eq 0)
     {
         $ServiceStatus = Get-Service 'Zabbix Agent 2'
         Write-Host ("Код выхода: " + $InstallExitCode.ExitCode + ". Установка успешна, проверяем службу...") -ForegroundColor Green
-        Write-Host ("Статус службы: " + $ServiceStatus.Status + ", тип запуска: " + $ServiceStatus.StartType) -ForegroundColor Green
+        if ($ServiceStatus.Status -like 'StartPending')
+        {
+            while ($ServiceStatus.Status -like 'StartPending')
+            {
+                Write-Host "Служба запускается..." -ForegroundColor DarkGray
+                $ServiceStatus = Get-Service 'Zabbix Agent 2'
+                Start-Sleep -Seconds 1
+            }
+            Write-Host ("Статус службы: " + $ServiceStatus.Status + ", тип запуска: " + $ServiceStatus.StartType) -ForegroundColor Green
+        }
+        else
+        {
+            Write-Host ("Статус службы: " + $ServiceStatus.Status + ", тип запуска: " + $ServiceStatus.StartType)
+        }
     }
 }
 else
