@@ -22,7 +22,6 @@ $TlsAccept = 'psk'
 $TlsPskIdentity = Read-Host -Prompt "Имя PSK ключа"
 $TlsPskValue = Read-Host -Prompt "PSK ключ" -AsSecureString
 $EnablePath = 1
-$EnablePsk = 1
 
 # Output Config
 Clear-Host
@@ -36,7 +35,6 @@ $HashTable = [ordered]@{
     'Сервер для активной проверки' = $ServerActive
     'Таймуат Агента' = $Timeout
     'Имя хоста' = $HostName
-    'Включить PSK' = $EnablePsk
     'Протокол подключения' = $TlsConnect
     'Протокол ответа' = $TlsAccept
     'Имя PSK ключа' = $TlsPskIdentity
